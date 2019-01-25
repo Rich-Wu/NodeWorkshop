@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.urlencoded());
 const port = 5050;
 
 app.set('views', './views'); //add a k-v pair to an object
@@ -24,7 +25,18 @@ app.get('/users', (req,res) => {
   res.render('users/index')
 })
 app.post('/users', (req,res) => {
-
+  let params = req.body
+  // Create function
+  // force: true will drop the table if it already exists
+  User.sync({force: false}).then(() => {
+    // Table created
+    return User.create({
+      name: params.name,
+      password: params.password,
+      email: params.email,
+      education: params.education
+    });
+  });
   res.redirect('/users') // takes the path, not the file path
 })
 app.get('/new-cohort', (req,res) => {
@@ -41,15 +53,5 @@ const User = sequelize.define('user', {
   email: Sequelize.STRING,
   education: Sequelize.INTEGER
 });
-
-// create function
-sequelize.sync()
-  .then(() => User.create({
-    username: 'janedoe',
-    birthday: new Date(1980, 6, 20)
-  }))
-  .then(jane => {
-    console.log(jane.toJSON());
-  });
 
 app.listen(port, () => { console.log(`Express app listening on http://localhost:${port}`); })
