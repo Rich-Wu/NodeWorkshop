@@ -13,6 +13,13 @@ app.get('/', (req,res) => {
 app.get('/signup', (req,res) => {
   res.render('users/new.ejs')
 })
+app.get('/users', (req,res) => {
+  res.render('users/index')
+})
+app.post('/users', (req,res) => {
+
+  res.redirect('/users') // takes the path, not the file path
+})
 app.get('/new-cohort', (req,res) => {
   res.render('cohorts/new.ejs')
 })
