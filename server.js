@@ -22,7 +22,14 @@ app.get('/signup', (req,res) => {
   res.render('users/new.ejs')
 })
 app.get('/users', (req,res) => {
-  res.render('users/index')
+  let users = []
+  User.findAll().then((user) => {
+    for (u of user) {
+      users.push(u);
+    }
+  }).then(() => {
+    res.render('users/index.ejs', {users:users})
+  })
 })
 app.post('/users', (req,res) => {
   let params = req.body
@@ -43,7 +50,14 @@ app.get('/new-cohort', (req,res) => {
   res.render('cohorts/new.ejs')
 })
 app.get('/cohorts', (req,res) => {
-  res.render('cohorts/index.ejs')
+  let cohorts = []
+  Cohort.findAll().then((cohort) => {
+    for (c of cohort) {
+      cohorts.push(c);
+    }
+  }).then(() => {
+    res.render('cohorts/index.ejs', {cohorts:cohorts})
+  })
 })
 app.post('/cohorts', (req,res) => {
   let params = req.body
