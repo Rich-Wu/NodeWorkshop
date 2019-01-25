@@ -10,5 +10,14 @@ app.set('view engine', 'ejs');
 app.get('/', (req,res) => {
   res.render('home.ejs')
 })
+app.get('/signup', (req,res) => {
+  res.render('users/new.ejs')
+})
+app.get('/new-cohort', (req,res) => {
+  res.render('cohorts/new.ejs')
+})
+app.get('/new-course', (req,res) => {
+  res.render('courses/new.ejs')
+})
 
 app.listen(port, () => { console.log(`Express app listening on http://localhost:${port}`); })
