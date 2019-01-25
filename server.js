@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
 const port = 5050;
 
 app.set('views', './views'); //add a k-v pair to an object
@@ -42,16 +42,40 @@ app.post('/users', (req,res) => {
 app.get('/new-cohort', (req,res) => {
   res.render('cohorts/new.ejs')
 })
+app.get('/cohorts', (req,res) => {
+  res.render('cohorts/index.ejs')
+})
+app.post('/cohorts', (req,res) => {
+  let params = req.body
+  // Create function
+  // force: true will drop the table if it already exists
+  Cohort.sync({force: false}).then(() => {
+    // Table created
+    return Cohort.create({
+      name: params.name,
+      startDate: params.startDate,
+      endDate: params.endDate,
+      courseId: params.courseId
+    });
+  });
+  res.redirect('/cohorts')
+})
 app.get('/new-course', (req,res) => {
   res.render('courses/new.ejs')
 })
-
 // Model definition
 const User = sequelize.define('user', {
   name: Sequelize.STRING,
   password: Sequelize.STRING,
   email: Sequelize.STRING,
   education: Sequelize.INTEGER
+});
+
+const Cohort = sequelize.define('cohort', {
+  name: Sequelize.STRING,
+  courseId: Sequelize.INTEGER,
+  startDate: Sequelize.DATEONLY,
+  endDate: Sequelize.DATEONLY
 });
 
 app.listen(port, () => { console.log(`Express app listening on http://localhost:${port}`); })
